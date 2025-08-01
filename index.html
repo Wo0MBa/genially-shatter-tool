@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Генератор анимации</title>
+  <title>Генератор для Genially</title>
   <style>
     * {
       margin: 0;
@@ -25,64 +25,68 @@
     h1 {
       text-align: center;
       color: #3498db;
+      font-size: 24px;
     }
     p {
       text-align: center;
       color: #aaa;
       margin: 10px 0 20px;
+      font-size: 16px;
     }
     label {
       display: block;
       margin: 16px 0 6px;
       color: #fff;
+      font-size: 15px;
     }
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #3498db;
       border-radius: 6px;
       background: #2c3e50;
       color: #fff;
+      font-size: 16px;
     }
     button {
       margin: 20px 0;
-      padding: 12px 20px;
+      padding: 14px 20px;
       background: #3498db;
       color: white;
       border: none;
       border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
+      width: 100%;
     }
-    #result {
-      margin-top: 20px;
-    }
-    #downloadLink {
-      display: block;
-      padding: 10px;
-      background: #27ae60;
-      color: white;
-      text-align: center;
+    #iframeCode {
+      width: 100%;
+      height: 100px;
+      padding: 12px;
+      background: #2c3e50;
+      color: #fff;
+      border: 1px solid #3498db;
       border-radius: 6px;
-      text-decoration: none;
+      font-family: monospace;
+      margin-top: 20px;
+      resize: vertical;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Генератор анимации</h1>
-    <p>Введите данные — получите HTML-файл с анимацией</p>
+    <h1>Авторское расширение от Феи Русского</h1>
+    <p>Добавьте свой персонаж и получите расширение для творчества</p>
 
-    <label>URL картинки:</label>
+    <label>URL изображения:</label>
     <input type="url" id="imgUrl" placeholder="https://example.com/image.jpg" required>
 
-    <label>Слова (5 через пробел):</label>
+    <label>Слова (через пробел):</label>
     <input type="text" id="wordsInput" placeholder="Счастье Мечта Свет Звезда Полёт" required>
 
-    <button onclick="generate()">Создать HTML-файл</button>
+    <button onclick="generate()">Получить iframe-код</button>
 
-    <div id="result" style="display:none;">
-      <a id="downloadLink" download="shatter.html">Скачать shatter.html</a>
-    </div>
+    <textarea id="iframeCode" placeholder="Здесь появится код для Genially..." readonly></textarea>
   </div>
 
   <script>
@@ -96,68 +100,29 @@
         return;
       }
       if (words.length !== 5) {
-        alert("Введите ровно 5 слов");
+        alert("Введите ровно 5 слов через пробел");
         return;
       }
 
-      // Создаём HTML с анимацией
-      const htmlContent = `
+      // Формируем HTML как строку
+      const html = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Shatter</title>
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: transparent;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .shatter-img {
-      width: 120px;
-      height: 120px;
-      cursor: pointer;
-      border-radius: 8px;
-      object-fit: cover;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .piece {
-      position: absolute;
-      border-radius: 2px;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-      pointer-events: none;
-    }
-    .word {
-      position: absolute;
-      font-size: 20px;
-      font-weight: bold;
-      color: #e74c3c;
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+    body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:transparent;font-family:Arial,sans-serif;}
+    .container{position:relative;width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;}
+    .shatter-img{width:120px;height:120px;cursor:pointer;border-radius:8px;object-fit:cover;box-shadow:0 4px 8px rgba(0,0,0,0.2);}
+    .piece{position:absolute;border-radius:2px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));pointer-events:none;}
+    .word{position:absolute;font-size:20px;font-weight:bold;color:#e74c3c;opacity:0;animation:fadeIn 1s forwards;text-shadow:1px 1px 2px rgba(0,0,0,0.2);}
+    @keyframes fadeIn{to{opacity:1;}}
   </style>
 </head>
 <body>
   <div class="container">
     <img src="${imgUrl}" alt="" class="shatter-img" id="shatterImg">
   </div>
-
   <script>
     document.getElementById("shatterImg").addEventListener("click", function(e) {
       const img = this;
@@ -187,7 +152,7 @@
           container.appendChild(piece);
 
           setTimeout(() => {
-            piece.style.transition = 'all 1s cubic-bezier(0.17, 0.67, 0.2, 1)';
+            piece.style.transition = 'all 1s cubic-bezier(0.17,0.67,0.2,1)';
             piece.style.transform = 'translate(' + vx + 'px, ' + vy + 'px) rotate(' + rotation + 'deg) scale(0.85)';
             piece.style.opacity = '0';
           }, 10);
@@ -216,16 +181,24 @@
       }, 600);
     });
   <\/script>
-</body>
-</html>
+<\/body>
+<\/html>
       `;
 
-      // Создаём файл
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const link = document.getElementById("downloadLink");
-      link.href = url;
-      document.getElementById("result").style.display = "block";
+      // Кодируем в base64 для надёжности
+      const encoded = btoa(unescape(encodeURIComponent(html)));
+      const iframe = `<iframe src="data:text/html;base64,${encoded}" width="100%" height="400" frameborder="0" style="border:none;"></iframe>`;
+
+      // Показываем код
+      const codeArea = document.getElementById("iframeCode");
+      codeArea.value = iframe;
+
+      // Автоматически копируем
+      codeArea.select();
+      document.execCommand("copy");
+
+      // Подсказка
+      alert("✅ Iframe-код сгенерирован и скопирован в буфер обмена!");
     }
   </script>
 </body>
