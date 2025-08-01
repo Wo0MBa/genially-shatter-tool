@@ -7,17 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Получаем данные
     const imgUrl = document.getElementById("imgUrl").value;
     const wordsInput = document.getElementById("wordsInput").value.trim();
-    const words = wordsInput.split(/\s+/); // Разделяем по пробелам
+    const words = wordsInput.split(/\s+/).filter(w => w);
 
     if (words.length !== 5) {
       alert("Введите ровно 5 слов через пробел!");
       return;
     }
 
-    // Формируем HTML-страницу для iframe
+    // Формируем HTML-страницу как строку
     const pageContent = `
 <!DOCTYPE html>
 <html>
@@ -93,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const img = this;
       const rect = img.getBoundingClientRect();
       const container = img.closest('.container');
-      const words = ${JSON.stringify(words)};
+      const words = ["${words.join('","')}"];
 
       const pieceW = 12;
       const pieceH = 12;
@@ -104,9 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
           piece.classList.add('piece');
           piece.style.width = pieceW + 'px';
           piece.style.height = pieceH + 'px';
-          piece.style.backgroundImage = \`url('\${img.src}')\`;
-          piece.style.backgroundSize = \`\${rect.width}px \${rect.height}px\`;
-          piece.style.backgroundPosition = \`-\${col * pieceW}px -\${row * pieceH}px\`;
+          piece.style.backgroundImage = 'url(\\"' + img.src + '\\")';
+          piece.style.backgroundSize = rect.width + 'px ' + rect.height + 'px';
+          piece.style.backgroundPosition = '-' + (col * pieceW) + 'px -' + (row * pieceH) + 'px';
           piece.style.left = (rect.left + col * pieceW) + 'px';
           piece.style.top = (rect.top + row * pieceH) + 'px';
 
@@ -120,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           setTimeout(() => {
             piece.style.transition = 'all 1s cubic-bezier(0.17, 0.67, 0.2, 1)';
-            piece.style.transform = \`translate(\${vx}px, \${vy}px) rotate(\${rotation}deg) scale(0.85)\`;
+            piece.style.transform = 'translate(' + vx + 'px, ' + vy + 'px) rotate(' + rotation + 'deg) scale(0.85)';
             piece.style.opacity = '0';
           }, 10);
 
@@ -141,8 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const wordEl = document.createElement('div');
           wordEl.classList.add('word');
           wordEl.textContent = word;
-          wordEl.style.left = \`\${x}px\`;
-          wordEl.style.top = \`\${y}px\`;
+          wordEl.style.left = x + 'px';
+          wordEl.style.top = y + 'px';
           container.appendChild(wordEl);
         });
       }, 600);
@@ -151,8 +150,17 @@ document.addEventListener("DOMContentLoaded", () => {
 </body>
 </html>`;
 
-    // Генерируем iframe с использованием srcdoc
-    const iframe = `<iframe srcdoc="${encodeURIComponent(pageContent)}" style="border:none;" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
+    // 🔥 Ключевое исправление: правильно экранируем кавычки и символы
+    const escapedContent = pageContent
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/&/g, '&amp;')
+      .replace(/\//g, '&#x2F;');
+
+    // Генерируем iframe
+    const iframe = `<iframe srcdoc="${escapedContent}" style="border:none;" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
+    
     iframeCode.value = iframe;
     output.style.display = "block";
   });
