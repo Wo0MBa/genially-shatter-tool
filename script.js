@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <div class="container">
     <img 
       src="${imgUrl}" 
-      alt="Кликни на меня" 
+      alt="" 
       class="shatter-img" 
       id="shatterImg"
     >
