@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Генератор рассыпающихся картинок для Genially</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Генератор анимации для Genially</h1>
+    <p>Вставь URL картинки и 5 слов, которые появятся при клике.</p>
+
+    <form id="generatorForm">
+      <label>Ссылка на картинку (URL):</label>
+      <input type="url" id="imgUrl" placeholder="https://example.com/image.png" required />
+
+      <label>Слово 1:</label>
+      <input type="text" id="word1" value="Счастье" required />
+      <label>Слово 2:</label>
+      <input type="text" id="word2" value="Мечта" required />
+      <label>Слово 3:</label>
+      <input type="text" id="word3" value="Свет" required />
+      <label>Слово 4:</label>
+      <input type="text" id="word4" value="Звезда" required />
+      <label>Слово 5:</label>
+      <input type="text" id="word5" value="Полёт" required />
+
+      <button type="submit">Сгенерировать iframe</button>
+    </form>
+
+    <div id="preview" class="preview">
+      <h3>Предпросмотр:</h3>
+      <div id="demoArea" class="demo-area"></div>
+    </div>
+
+    <div id="output" class="output" style="display:none;">
+      <h3>Код для Genially:</h3>
+      <textarea id="iframeCode" readonly></textarea>
+      <button id="copyBtn">Копировать</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
