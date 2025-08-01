@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
           piece.classList.add('piece');
           piece.style.width = pieceW + 'px';
           piece.style.height = pieceH + 'px';
-          piece.style.backgroundImage = 'url(\\"' + img.src + '\\")';
+          piece.style.backgroundImage = 'url(\'' + img.src + '\')';
           piece.style.backgroundSize = rect.width + 'px ' + rect.height + 'px';
           piece.style.backgroundPosition = '-' + (col * pieceW) + 'px -' + (row * pieceH) + 'px';
           piece.style.left = (rect.left + col * pieceW) + 'px';
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </body>
 </html>`;
 
-    // 🔥 Ключевое исправление: правильно экранируем кавычки и символы
+    // Экранирование кавычек и специальных символов
     const escapedContent = pageContent
       .replace(/"/g, '&quot;')
       .replace(/</g, '<')
