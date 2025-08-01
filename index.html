@@ -3,127 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Генератор рассыпающихся картинок для Genially</title>
+  <title>Рассыпающаяся картинка</title>
   <style>
-    * {
+    body, html {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f7f9fc;
-      color: #333;
-      line-height: 1.6;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
     }
 
     .container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      text-align: center;
-      margin: 10px 0 20px;
-      color: #555;
-      font-size: 16px;
-    }
-
-    form {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-
-    label {
-      display: block;
-      margin-top: 16px;
-      font-weight: bold;
-      color: #2c3e50;
-      font-size: 15px;
-    }
-
-    input[type="url"],
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      margin-top: 24px;
-      padding: 14px 24px;
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #2980b9;
-    }
-
-    .preview {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-
-    .preview h3 {
-      margin-bottom: 12px;
-      color: #2c3e50;
-    }
-
-    .demo-area {
-      width: 100%;
-      height: 300px;
-      border: 2px dashed #ddd;
-      border-radius: 10px;
       position: relative;
-      overflow: hidden;
-      background: #f9f9f9;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #aaa;
     }
 
-    .demo-img {
-      position: absolute;
+    .shatter-img {
       width: 120px;
       height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       cursor: pointer;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       transition: transform 0.2s;
     }
 
-    .demo-img:hover {
-      transform: scale(1.08);
+    .shatter-img:hover {
+      transform: scale(1.05);
+    }
+
+    .piece {
+      position: absolute;
+      background-image: url('https://via.placeholder.com/120x120/3498db/ffffff?text=CLICK');
+      background-size: 120px 120px;
+      border-radius: 2px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+      pointer-events: none;
     }
 
     .word {
       position: absolute;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       color: #e74c3c;
       opacity: 0;
@@ -134,296 +60,90 @@
     @keyframes fadeIn {
       to { opacity: 1; }
     }
-
-    .output {
-      display: none;
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    .output textarea {
-      width: 100%;
-      height: 120px;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-family: monospace;
-      resize: vertical;
-    }
-
-    #copyBtn {
-      background: #27ae60;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    #copyBtn:hover {
-      background: #219653;
-    }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h1>Генератор анимации для Genially</h1>
-    <p>Вставь URL картинки и 5 слов, которые появятся при клике.</p>
-
-    <form id="generatorForm">
-      <label>Ссылка на картинку (URL):</label>
-      <input type="url" id="imgUrl" placeholder="https://example.com/image.png" required />
-
-      <label>Слово 1:</label>
-      <input type="text" id="word1" value="Счастье" required />
-      <label>Слово 2:</label>
-      <input type="text" id="word2" value="Мечта" required />
-      <label>Слово 3:</label>
-      <input type="text" id="word3" value="Свет" required />
-      <label>Слово 4:</label>
-      <input type="text" id="word4" value="Звезда" required />
-      <label>Слово 5:</label>
-      <input type="text" id="word5" value="Полёт" required />
-
-      <button type="submit">Сгенерировать iframe</button>
-    </form>
-
-    <div class="preview">
-      <h3>Предпросмотр:</h3>
-      <div id="demoArea" class="demo-area">
-        Кликни на кнопку, чтобы увидеть предпросмотр
-      </div>
-    </div>
-
-    <div id="output" class="output">
-      <h3>Код для Genially:</h3>
-      <textarea id="iframeCode" readonly></textarea>
-      <button id="copyBtn">Копировать</button>
-    </div>
+    <!-- Картинка для клика -->
+    <img 
+      src="https://img.championat.com/s/1350x900/news/big/k/n/v-ssha-pohitili-ogromnuyu-statuyu-shreka-za-delo-vzyalas-mestnaya-policiya_1675443151438712349.jpg" 
+      alt="Кликни на меня" 
+      class="shatter-img" 
+      id="shatterImg"
+    >
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("generatorForm");
-      const demoArea = document.getElementById("demoArea");
-      const output = document.getElementById("output");
-      const iframeCode = document.getElementById("iframeCode");
-      const copyBtn = document.getElementById("copyBtn");
+    document.getElementById("shatterImg").addEventListener("click", function(e) {
+      const img = this;
+      const rect = img.getBoundingClientRect();
+      const container = img.closest('.container');
+      const words = ["Счастье", "Мечта", "Свет", "Звезда", "Полёт"];
 
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
+      // Размеры картинки
+      const pieceW = 12; // 10x10 = 100 кусочков
+      const pieceH = 12;
 
-        const imgUrl = document.getElementById("imgUrl").value;
-        const words = [
-          document.getElementById("word1").value,
-          document.getElementById("word2").value,
-          document.getElementById("word3").value,
-          document.getElementById("word4").value,
-          document.getElementById("word5").value,
-        ];
+      // Создаём кусочки
+      for (let row = 0; row < 10; row++) {
+        for (let col = 0; col < 10; col++) {
+          const piece = document.createElement('div');
+          piece.classList.add('piece');
+          piece.style.width = pieceW + 'px';
+          piece.style.height = pieceH + 'px';
+          
+          // Позиционируем фон (чтобы кусочки были с нужной частью изображения)
+          piece.style.backgroundPosition = `-${col * pieceW}px -${row * pieceH}px`;
+          
+          // Начальная позиция — где была картинка
+          piece.style.left = (rect.left + col * pieceW) + 'px';
+          piece.style.top = (rect.top + row * pieceH) + 'px';
 
-        // Очистка
-        demoArea.innerHTML = "";
-        const img = document.createElement("img");
-        img.src = imgUrl;
-        img.alt = "Картинка";
-        img.className = "demo-img";
-        img.style.top = "50%";
-        img.style.left = "50%";
-        img.style.transform = "translate(-50%, -50%)";
-        demoArea.appendChild(img);
+          // Случайное направление и скорость
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 20 + Math.random() * 50;
+          const vx = Math.cos(angle) * speed;
+          const vy = Math.sin(angle) * speed;
+          const rotation = -20 + Math.random() * 40;
 
-        // Анимация при клике
-        img.onclick = (e) => {
-          shatterImage(img, e, words);
-        };
+          container.appendChild(piece);
 
-        // Генерация iframe с ВСЕМ кодом внутри (без Blob)
-        const iframeSrc = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <title>Shatter</title>
-            <style>
-              body, html { margin: 0; padding: 0; overflow: hidden; background: transparent; }
-              .container {
-                position: relative;
-                width: 100vw;
-                height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              }
-              .shatter-img {
-                width: 120px;
-                height: 120px;
-                object-fit: cover;
-                border-radius: 8px;
-                cursor: pointer;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-              }
-              .piece {
-                position: absolute;
-                background-image: url('${imgUrl}');
-                background-size: 120px 120px;
-                border-radius: 2px;
-                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-                pointer-events: none;
-              }
-              .word {
-                position: absolute;
-                font-size: 18px;
-                font-weight: bold;
-                color: #e74c3c;
-                opacity: 0;
-                animation: fadeIn 1s forwards;
-                text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-              }
-              @keyframes fadeIn {
-                to { opacity: 1; }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <img src="${imgUrl}" class="shatter-img" onclick="shatter(this, event)">
-            </div>
-            <script>
-              function shatter(img, e) {
-                const w = 12; // 10x10 = 100 кусочков
-                const h = 12;
-                const container = document.querySelector('.container');
+          // Анимация разлёта
+          setTimeout(() => {
+            piece.style.transition = 'all 1s cubic-bezier(0.17, 0.67, 0.2, 1)';
+            piece.style.transform = `translate(${vx}px, ${vy}px) rotate(${rotation}deg) scale(0.9)`;
+            piece.style.opacity = '0';
+          }, 10);
 
-                for (let row = 0; row < 10; row++) {
-                  for (let col = 0; col < 10; col++) {
-                    const piece = document.createElement('div');
-                    piece.className = 'piece';
-                    piece.style.width = w + 'px';
-                    piece.style.height = h + 'px';
-                    piece.style.backgroundPosition = \`-\${col * w}px -\${row * h}px\`;
-                    piece.style.left = (e.clientX - 60 + col * w) + 'px';
-                    piece.style.top = (e.clientY - 60 + row * h) + 'px';
-
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = 20 + Math.random() * 50;
-                    const vx = Math.cos(angle) * speed;
-                    const vy = Math.sin(angle) * speed;
-                    const rot = -20 + Math.random() * 40;
-
-                    container.appendChild(piece);
-
-                    setTimeout(() => {
-                      piece.style.transition = 'all 1s cubic-bezier(0.17, 0.67, 0.2, 1)';
-                      piece.style.transform = \`translate(\${vx}px, \${vy}px) rotate(\${rot}deg)\`;
-                      piece.style.opacity = '0';
-                    }, 10);
-
-                    setTimeout(() => piece.remove(), 1000);
-                  }
-                }
-
-                img.style.opacity = '0';
-                setTimeout(() => img.remove(), 300);
-
-                setTimeout(() => {
-                  const words = ${JSON.stringify(words)};
-                  words.forEach((word, i) => {
-                    const angle = (Math.PI * 2 * i) / 5;
-                    const dist = 100;
-                    const x = e.clientX + Math.cos(angle) * dist;
-                    const y = e.clientY + Math.sin(angle) * dist;
-
-                    const wordEl = document.createElement('div');
-                    wordEl.className = 'word';
-                    wordEl.textContent = word;
-                    wordEl.style.left = x + 'px';
-                    wordEl.style.top = y + 'px';
-                    container.appendChild(wordEl);
-                  });
-                }, 600);
-              }
-            <\/script>
-          </body>
-          </html>
-        `;
-
-        // Код iframe
-        const iframe = `<iframe srcdoc="${encodeURIComponent(iframeSrc)}" style="border:none;" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
-        iframeCode.value = iframe;
-        output.style.display = "block";
-      });
-
-      // Копировать
-      copyBtn.addEventListener("click", () => {
-        iframeCode.select();
-        document.execCommand("copy");
-        copyBtn.textContent = "Скопировано!";
-        setTimeout(() => (copyBtn.textContent = "Копировать"), 2000);
-      });
-
-      // Функция для предпросмотра (та же логика)
-      function shatterImage(img, e, words) {
-        const w = 12;
-        const h = 12;
-
-        for (let row = 0; row < 10; row++) {
-          for (let col = 0; col < 10; col++) {
-            const piece = document.createElement("div");
-            piece.style.position = "absolute";
-            piece.style.width = w + "px";
-            piece.style.height = h + "px";
-            piece.style.backgroundColor = "#3498db";
-            piece.style.backgroundImage = `url('${img.src}')`;
-            piece.style.backgroundSize = "120px 120px";
-            piece.style.backgroundPosition = `-${col * w}px -${row * h}px`;
-            piece.style.borderRadius = "2px";
-            piece.style.filter = "drop-shadow(0 1px 2px rgba(0,0,0,0.3))";
-            piece.style.left = (e.clientX - 60 + col * w) + "px";
-            piece.style.top = (e.clientY - 60 + row * h) + "px";
-            piece.style.pointerEvents = "none";
-
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 20 + Math.random() * 50;
-            const vx = Math.cos(angle) * speed;
-            const vy = Math.sin(angle) * speed;
-            const rot = -20 + Math.random() * 40;
-
-            demoArea.appendChild(piece);
-
-            setTimeout(() => {
-              piece.style.transition = "all 1s cubic-bezier(0.17, 0.67, 0.2, 1)";
-              piece.style.transform = `translate(${vx}px, ${vy}px) rotate(${rot}deg)`;
-              piece.style.opacity = "0";
-            }, 10);
-
-            setTimeout(() => piece.remove(), 1000);
-          }
+          // Удаляем кусочек после анимации
+          setTimeout(() => piece.remove(), 1000);
         }
-
-        img.style.opacity = "0";
-        setTimeout(() => img.remove(), 300);
-
-        setTimeout(() => {
-          words.forEach((word, i) => {
-            const angle = (Math.PI * 2 * i) / 5;
-            const dist = 100;
-            const x = e.clientX + Math.cos(angle) * dist;
-            const y = e.clientY + Math.sin(angle) * dist;
-
-            const wordEl = document.createElement("div");
-            wordEl.classList.add("word");
-            wordEl.textContent = word;
-            wordEl.style.left = `${x}px`;
-            wordEl.style.top = `${y}px`;
-            demoArea.appendChild(wordEl);
-          });
-        }, 600);
       }
+
+      // Убираем саму картинку
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.3s';
+      setTimeout(() => img.remove(), 300);
+
+      // Через 0.6 сек — показываем слова
+      setTimeout(() => {
+        words.forEach((word, i) => {
+          const angle = (Math.PI * 2 * i) / 5; // равномерно по кругу
+          const distance = 100 + Math.random() * 20;
+          const x = e.clientX + Math.cos(angle) * distance;
+          const y = e.clientY + Math.sin(angle) * distance;
+
+          const wordEl = document.createElement('div');
+          wordEl.classList.add('word');
+          wordEl.textContent = word;
+          wordEl.style.left = `${x}px`;
+          wordEl.style.top = `${y}px`;
+          container.appendChild(wordEl);
+        });
+      }, 600);
     });
   </script>
+
 </body>
 </html>
