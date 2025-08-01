@@ -4,70 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Рассыпающаяся картинка</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #f0f0f0;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .shatter-img {
-      width: 120px;
-      height: 120px;
-      cursor: pointer;
-      border-radius: 8px;
-      object-fit: cover;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s;
-    }
-
-    .shatter-img:hover {
-      transform: scale(1.05);
-    }
-
-    .piece {
-      position: absolute;
-      background-image: url('https://via.placeholder.com/120x120/3498db/ffffff?text=CLICK');
-      background-size: 120px 120px;
-      border-radius: 2px;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-      pointer-events: none;
-    }
-
-    .word {
-      position: absolute;
-      font-size: 20px;
-      font-weight: bold;
-      color: #e74c3c;
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <div class="container">
-    <!-- Картинка для клика -->
     <img 
-      src="https://img.championat.com/s/1350x900/news/big/k/n/v-ssha-pohitili-ogromnuyu-statuyu-shreka-za-delo-vzyalas-mestnaya-policiya_1675443151438712349.jpg" 
+      src="https://via.placeholder.com/120x120/3498db/ffffff?text=CLICK" 
       alt="Кликни на меня" 
       class="shatter-img" 
       id="shatterImg"
@@ -81,26 +24,28 @@
       const container = img.closest('.container');
       const words = ["Счастье", "Мечта", "Свет", "Звезда", "Полёт"];
 
-      // Размеры картинки
-      const pieceW = 12; // 10x10 = 100 кусочков
+      // Размер одного кусочка (10x10 сетка)
+      const pieceW = 12;
       const pieceH = 12;
 
-      // Создаём кусочки
+      // Создаём 100 кусочков
       for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
           const piece = document.createElement('div');
           piece.classList.add('piece');
           piece.style.width = pieceW + 'px';
           piece.style.height = pieceH + 'px';
-          
-          // Позиционируем фон (чтобы кусочки были с нужной частью изображения)
+
+          // ВАЖНО: задаём фон и позицию фонового изображения
+          piece.style.backgroundImage = `url('${img.src}')`;
+          piece.style.backgroundSize = `${rect.width}px ${rect.height}px`;
           piece.style.backgroundPosition = `-${col * pieceW}px -${row * pieceH}px`;
-          
-          // Начальная позиция — где была картинка
+
+          // Начальная позиция — где был фрагмент на картинке
           piece.style.left = (rect.left + col * pieceW) + 'px';
           piece.style.top = (rect.top + row * pieceH) + 'px';
 
-          // Случайное направление и скорость
+          // Случайное направление
           const angle = Math.random() * Math.PI * 2;
           const speed = 20 + Math.random() * 50;
           const vx = Math.cos(angle) * speed;
@@ -109,28 +54,27 @@
 
           container.appendChild(piece);
 
-          // Анимация разлёта
+          // Анимация полёта
           setTimeout(() => {
             piece.style.transition = 'all 1s cubic-bezier(0.17, 0.67, 0.2, 1)';
-            piece.style.transform = `translate(${vx}px, ${vy}px) rotate(${rotation}deg) scale(0.9)`;
+            piece.style.transform = `translate(${vx}px, ${vy}px) rotate(${rotation}deg) scale(0.85)`;
             piece.style.opacity = '0';
           }, 10);
 
-          // Удаляем кусочек после анимации
+          // Удаляем после анимации
           setTimeout(() => piece.remove(), 1000);
         }
       }
 
-      // Убираем саму картинку
+      // Убираем исходную картинку
       img.style.opacity = '0';
-      img.style.transition = 'opacity 0.3s';
       setTimeout(() => img.remove(), 300);
 
-      // Через 0.6 сек — показываем слова
+      // Показываем слова через 0.6 сек
       setTimeout(() => {
         words.forEach((word, i) => {
-          const angle = (Math.PI * 2 * i) / 5; // равномерно по кругу
-          const distance = 100 + Math.random() * 20;
+          const angle = (Math.PI * 2 * i) / 5;
+          const distance = 100 + Math.random() * 30;
           const x = e.clientX + Math.cos(angle) * distance;
           const y = e.clientY + Math.sin(angle) * distance;
 
