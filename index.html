@@ -4,9 +4,119 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Генератор анимации для Genially</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      text-align: center;
+      color: #3498db;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      margin: 15px 0 20px;
+      color: #aaa;
+      font-size: 16px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    input[type="url"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #3498db;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #2c3e50;
+      color: #fff;
+    }
+
+    input:focus {
+      border-color: #27ae60;
+      outline: none;
+    }
+
+    button {
+      margin-top: 24px;
+      padding: 14px 24px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    .output {
+      margin-top: 20px;
+    }
+
+    #iframeCode {
+      width: 100%;
+      height: 120px;
+      padding: 12px;
+      border: 1px solid #3498db;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
+      background: #2c3e50;
+      color: #fff;
+    }
+
+    #copyBtn {
+      margin-top: 10px;
+      padding: 10px 18px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #copyBtn:hover {
+      background: #219653;
+    }
+  </style>
 </head>
 <body>
+
   <div class="container">
     <h1>Авторское расширение от Феи Русского</h1>
     <p>Добавьте свой персонаж и получите расширение для творчества</p>
@@ -27,6 +137,177 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("generatorForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const imgUrl = document.getElementById("imgUrl").value.trim();
+      const wordsInput = document.getElementById("wordsInput").value.trim();
+      const words = wordsInput.split(/\s+/).filter(w => w);
+
+      if (words.length !== 5) {
+        alert("Введите ровно 5 слов через пробел!");
+        return;
+      }
+
+      // === СОБИРАЕМ ВЕСЬ HTML ДЛЯ IFRAME ВНУТРИ srcdoc ===
+      const iframeHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Shatter Effect</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .shatter-img {
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+    }
+    .shatter-img:hover {
+      transform: scale(1.05);
+    }
+    .piece {
+      position: absolute;
+      border-radius: 2px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+      pointer-events: none;
+    }
+    .word {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #e74c3c;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="${imgUrl}" alt="" class="shatter-img" id="shatterImg">
+  </div>
+
+  <script>
+    document.getElementById("shatterImg").addEventListener("click", function(e) {
+      const img = this;
+      const rect = img.getBoundingClientRect();
+      const container = document.querySelector(".container");
+      const words = ["${words.join('","')}"];
+
+      const pieceW = 12;
+      const pieceH = 12;
+
+      // Создаём 100 кусочков
+      for (let row = 0; row < 10; row++) {
+        for (let col = 0; col < 10; col++) {
+          const piece = document.createElement("div");
+          piece.classList.add("piece");
+          piece.style.width = pieceW + "px";
+          piece.style.height = pieceH + "px";
+          piece.style.backgroundImage = "url('" + img.src + "')";
+          piece.style.backgroundSize = rect.width + "px " + rect.height + "px";
+          piece.style.backgroundPosition = "-" + (col * pieceW) + "px -" + (row * pieceH) + "px";
+          piece.style.left = (rect.left + col * pieceW) + "px";
+          piece.style.top = (rect.top + row * pieceH) + "px";
+
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 20 + Math.random() * 50;
+          const vx = Math.cos(angle) * speed;
+          const vy = Math.sin(angle) * speed;
+          const rotation = -20 + Math.random() * 40;
+
+          container.appendChild(piece);
+
+          setTimeout(() => {
+            piece.style.transition = "all 1s cubic-bezier(0.17, 0.67, 0.2, 1)";
+            piece.style.transform = "translate(" + vx + "px, " + vy + "px) rotate(" + rotation + "deg) scale(0.85)";
+            piece.style.opacity = "0";
+          }, 10);
+
+          setTimeout(() => piece.remove(), 1000);
+        }
+      }
+
+      // Убираем картинку
+      img.style.opacity = "0";
+      setTimeout(() => img.remove(), 300);
+
+      // Показываем слова
+      setTimeout(() => {
+        words.forEach((word, i) => {
+          const angle = (Math.PI * 2 * i) / 5;
+          const distance = 100 + Math.random() * 30;
+          const x = e.clientX + Math.cos(angle) * distance;
+          const y = e.clientY + Math.sin(angle) * distance;
+
+          const wordEl = document.createElement("div");
+          wordEl.classList.add("word");
+          wordEl.textContent = word;
+          wordEl.style.left = x + "px";
+          wordEl.style.top = y + "px";
+          container.appendChild(wordEl);
+        });
+      }, 600);
+    });
+  <\/script>
+<\/body>
+<\/html>
+      `;
+
+      // Экранируем символы для srcdoc
+      const escapedHTML = iframeHTML
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
+        .replace(/&/g, '&amp;')
+        .replace(/\//g, '&#x2F;');
+
+      // Генерируем iframe
+      const iframe = `<iframe srcdoc="${escapedHTML}" style="border:none;" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
+      document.getElementById("iframeCode").value = iframe;
+      document.getElementById("output").style.display = "block";
+    });
+
+    // Копирование
+    document.getElementById("copyBtn").addEventListener("click", function() {
+      const textarea = document.getElementById("iframeCode");
+      textarea.select();
+      document.execCommand("copy");
+      this.textContent = "Скопировано!";
+      setTimeout(() => {
+        this.textContent = "Копировать";
+      }, 2000);
+    });
+  </script>
+
 </body>
 </html>
