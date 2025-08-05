@@ -35,45 +35,15 @@
       text-align: center;
       color: #00bfff;
       text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       white-space: normal;
     }
 
-    .glow-text {
-      font-size: 1.2rem;
+    p.subtitle {
+      font-size: 1rem;
       text-align: center;
-      color: #00bfff;
-      text-shadow: 
-        0 0 10px rgba(0, 191, 255, 0.7),
-        0 0 20px rgba(0, 191, 255, 0.5),
-        0 0 30px rgba(0, 191, 255, 0.3);
+      color: #aaa;
       margin-bottom: 20px;
-      font-weight: 500;
-      white-space: normal;
-      animation: pulse 2s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from {
-        text-shadow: 
-          0 0 10px rgba(0, 191, 255, 0.7),
-          0 0 20px rgba(0, 191, 255, 0.5),
-          0 0 30px rgba(0, 191, 255, 0.3);
-      }
-      to {
-        text-shadow: 
-          0 0 15px rgba(0, 191, 255, 0.9),
-          0 0 25px rgba(0, 191, 255, 0.7),
-          0 0 35px rgba(0, 191, 255, 0.5);
-      }
-    }
-
-    .step {
-      font-size: 1.1rem;
-      color: #00bfff;
-      margin: 25px 0 15px;
-      font-weight: bold;
-      text-align: center;
     }
 
     .form-group {
@@ -87,8 +57,7 @@
       color: #00bfff;
     }
 
-    input[type="text"], 
-    input[type="url"] {
+    input[type="text"], input[type="url"] {
       width: 100%;
       padding: 12px;
       border: 2px solid #00bfff;
@@ -99,18 +68,10 @@
       transition: all 0.3s ease;
     }
 
-    input[type="text"]:focus, 
-    input[type="url"]:focus {
+    input[type="text"]:focus, input[type="url"]:focus {
       outline: none;
       border-color: #00ffff;
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
-
-    .hint {
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-top: 5px;
-      display: block;
     }
 
     button {
@@ -167,9 +128,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>Авторское расширение от Феи Русского</h1>
-    <p class="glow-text">Бум слов</p>
-    <p class="step">Создайте интерактивный элемент для урока</p>
+    <h1>Авторское расширение от Феи русского</h1>
+    <h1>Бум слов</h1>
+    <p class="subtitle">Введите URL изображения и получите готовое расширение</p>
 
     <div class="form-group">
       <label for="image-url">URL изображения:</label>
@@ -185,7 +146,15 @@
 
     <textarea id="iframe-code" readonly>Здесь появится iframe-код для Genially</textarea>
 
-    <p class="instructions">* Скопируйте код и вставьте его в Genially как "Встроенный контент".</p>
+    <div class="instructions">
+      <p><strong>Как использовать:</strong></p>
+      <ol>
+        <li>Введите URL изображения</li>
+        <li>Нажмите "Получить iframe-код"</li>
+        <li>Скопируйте код и вставьте в Genially как веб-виджет</li>
+        <li>Творите!</li>
+      </ol>
+    </div>
   </div>
 
   <script>
@@ -221,7 +190,7 @@
         const textarea = document.getElementById('iframe-code');
         textarea.select();
         document.execCommand('copy');
-        alert('✅ Iframe-код скопирован в буфер!');
+        alert('iframe-код скопирован в буфер обмена!');
       }, 100);
     });
   </script>
