@@ -3,226 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Генератор рассыпающейся картинки</title>
+  <title>Split Vertical Effect</title>
   <style>
-    * {
-      box-sizing: border-box;
+    body, html {
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+      font-family: Arial, sans-serif;
     }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0c1427, #1a1f33, #0c1427);
-      color: #e0e0e0;
-      min-height: 100vh;
-      padding: 20px;
-      overflow-x: hidden;
-    }
-
     .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
-    h1 {
-      font-size: 1.5rem;
-      text-align: center;
-      color: #00bfff;
-      text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
-      margin-bottom: 10px;
-      white-space: normal;
-    }
-
-    .glow-text {
-      font-size: 1.2rem;
-      text-align: center;
-      color: #00bfff;
-      text-shadow: 
-        0 0 10px rgba(0, 191, 255, 0.7),
-        0 0 20px rgba(0, 191, 255, 0.5),
-        0 0 30px rgba(0, 191, 255, 0.3);
-      margin-bottom: 20px;
-      font-weight: 500;
-      white-space: normal;
-      animation: pulse 2s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from {
-        text-shadow: 
-          0 0 10px rgba(0, 191, 255, 0.7),
-          0 0 20px rgba(0, 191, 255, 0.5),
-          0 0 30px rgba(0, 191, 255, 0.3);
-      }
-      to {
-        text-shadow: 
-          0 0 15px rgba(0, 191, 255, 0.9),
-          0 0 25px rgba(0, 191, 255, 0.7),
-          0 0 35px rgba(0, 191, 255, 0.5);
-      }
-    }
-
-    .step {
-      font-size: 1.1rem;
-      color: #00bfff;
-      margin: 25px 0 15px;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #00bfff;
-    }
-
-    input[type="text"], 
-    input[type="url"] {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #00bfff;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.2);
-      color: #e0e0e0;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    input[type="text"]:focus, 
-    input[type="url"]:focus {
-      outline: none;
-      border-color: #00ffff;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
-
-    .hint {
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-top: 5px;
-      display: block;
-    }
-
-    button {
-      background: #00bfff;
-      color: white;
-      border: none;
-      padding: 14px 25px;
-      font-size: 1.1rem;
-      border-radius: 8px;
+    .main-image {
+      width: 300px;
+      height: 200px;
       cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
-    }
-
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0, 255, 255, 0.6);
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 150px;
-      background: rgba(0, 0, 0, 0.2);
-      color: #e0e0e0;
-      padding: 15px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 0.9rem;
-      border: 2px solid #00bfff;
-      resize: vertical;
-      transition: all 0.3s ease;
-    }
-
-    textarea:focus {
+      object-fit: contain;
+      z-index: 20;
+      position: absolute;
+      transition: transform 0.2s ease;
+      border: none;
       outline: none;
-      border-color: #00ffff;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
-
-    .instructions {
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: #aaa;
+    .main-image:hover {
+      transform: scale(1.03);
+    }
+    .half {
+      position: absolute;
+      pointer-events: none;
+      z-index: 15;
+      border: none;
+      outline: none;
     }
   </style>
 </head>
 <body>
+  <!-- Звуковой элемент -->
+  <audio id="split-sound" preload="auto">
+    <source src="sounds/click.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="container">
-    <h1>Авторское расширение от Феи Русского</h1>
-    <p class="glow-text">Бум слов</p>
-    <p class="step">Создайте интерактивный элемент для урока</p>
-
-    <div class="form-group">
-      <label for="image-url">URL изображения:</label>
-      <input type="url" id="image-url" placeholder="">
-    </div>
-
-    <div class="form-group">
-      <label for="words-list">5 слов (через пробел):</label>
-      <input type="text" id="words-list" placeholder="">
-    </div>
-
-    <button id="generate-iframe">Получить iframe-код для Genially</button>
-
-    <textarea id="iframe-code" readonly>Здесь появится iframe-код для Genially</textarea>
-
-    <p class="instructions">* Скопируйте код и вставьте его в Genially как "Встроенный контент".</p>
+    <img src="" alt="" class="main-image" id="mainImg">
   </div>
 
   <script>
-    document.getElementById('generate-iframe').addEventListener('click', function () {
-      const imageUrl = document.getElementById('image-url').value.trim();
-      const wordsText = document.getElementById('words-list').value.trim();
+    // Получаем звуковой элемент
+    const splitSound = document.getElementById('split-sound');
 
-      if (!imageUrl) {
-        alert('Введите URL изображения');
+    // Улучшенная функция для воспроизведения звука
+    function playSound(soundElement) {
+      if (!soundElement) {
+        console.log("Звуковой элемент не найден");
         return;
       }
-
-      if (!wordsText) {
-        alert('Введите слова через пробел');
-        return;
-      }
-
-      const words = wordsText.split(' ').filter(w => w);
-      if (words.length !== 5) {
-        alert('Введите ровно 5 слов');
-        return;
-      }
-
-      // ✅ Рабочий URL — мой хостинг (временно)
-      const widgetUrl = `https://wo0mba.github.io/genially-shatter-tool/widget.html?img=${encodeURIComponent(imageUrl)}&words=${encodeURIComponent(words.join(' '))}`;
-
-      const iframeCode = `<iframe src="${widgetUrl}" width="100%" height="400" frameborder="0" style="border:none;width:100%;height:400px;overflow:hidden;"></iframe>`;
       
-      document.getElementById('iframe-code').value = iframeCode;
+      try {
+        if (soundElement.currentTime) {
+          soundElement.currentTime = 0;
+        }
+        
+        const playPromise = soundElement.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Звук заблокирован браузером:", error);
+          });
+        }
+      } catch (error) {
+        console.log("Ошибка воспроизведения звука:", error);
+      }
+    }
+
+    // Получаем параметр из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const imgUrl = urlParams.get('img') || 'https://i.pinimg.com/originals/d2/20/b6/d220b6a9c48fb4c048e2ed33d4f20873.png';
+
+    // Устанавливаем изображение
+    const mainImg = document.getElementById("mainImg");
+    mainImg.src = imgUrl;
+
+    mainImg.addEventListener("click", function(e) {
+      // Воспроизводим звук при клике
+      playSound(splitSound);
       
-      // Автоматически копируем
+      const rect = mainImg.getBoundingClientRect();
+      const container = mainImg.closest('.container');
+      
+      // Точные размеры уменьшенной картинки
+      const displayWidth = 300;
+      const displayHeight = 200;
+      const halfHeight = 100;
+      
+      // Точные координаты центра картинки
+      const imgLeft = (window.innerWidth - displayWidth) / 2;
+      const imgTop = (window.innerHeight - displayHeight) / 2;
+      
+      // Скрываем оригинальное изображение
+      mainImg.style.pointerEvents = 'none';
+      mainImg.style.opacity = '0';
+      
+      // Создаем верхнюю половину
+      const topHalf = document.createElement('img');
+      topHalf.classList.add('half');
+      topHalf.src = imgUrl;
+      topHalf.style.width = displayWidth + 'px';
+      topHalf.style.height = displayHeight + 'px';
+      topHalf.style.objectFit = 'contain';
+      topHalf.style.objectPosition = 'center';
+      topHalf.style.clipPath = 'polygon(0 0, 100% 0, 100% 50%, 0 50%)';
+      topHalf.style.left = imgLeft + 'px';
+      topHalf.style.top = imgTop + 'px';
+      
+      // Создаем нижнюю половину
+      const bottomHalf = document.createElement('img');
+      bottomHalf.classList.add('half');
+      bottomHalf.src = imgUrl;
+      bottomHalf.style.width = displayWidth + 'px';
+      bottomHalf.style.height = displayHeight + 'px';
+      bottomHalf.style.objectFit = 'contain';
+      bottomHalf.style.objectPosition = 'center';
+      bottomHalf.style.clipPath = 'polygon(0 50%, 100% 50%, 100% 100%, 0 100%)';
+      bottomHalf.style.left = imgLeft + 'px';
+      bottomHalf.style.top = imgTop + 'px';
+      
+      container.appendChild(topHalf);
+      container.appendChild(bottomHalf);
+      
+      // Анимация разлета вверх и вниз
       setTimeout(() => {
-        const textarea = document.getElementById('iframe-code');
-        textarea.select();
-        document.execCommand('copy');
-        alert('✅ Iframe-код скопирован в буфер!');
-      }, 100);
+        topHalf.style.transition = 'all 1s cubic-bezier(0.2, 0.8, 0.3, 1)';
+        topHalf.style.transform = 'translateY(-100px)';
+        topHalf.style.opacity = '0';
+        
+        bottomHalf.style.transition = 'all 1s cubic-bezier(0.2, 0.8, 0.3, 1)';
+        bottomHalf.style.transform = 'translateY(100px)';
+        bottomHalf.style.opacity = '0';
+      }, 10);
+      
+      // Удаляем элементы после анимации
+      setTimeout(() => {
+        topHalf.remove();
+        bottomHalf.remove();
+        mainImg.style.display = 'none';
+      }, 1100);
     });
   </script>
 </body>
