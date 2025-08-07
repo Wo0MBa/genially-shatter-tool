@@ -43,25 +43,26 @@
     }
     .word {
       position: absolute;
-      font-size: 20px;
-      font-weight: bold;
-      color: #fff;
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-      z-index: 10;
-      user-select: none;
-      cursor: pointer;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       background: #1a73e8;
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
       padding: 12px 20px;
       border: 2px solid #4fc3f7;
       border-radius: 8px;
+      white-space: nowrap;
       box-shadow: 0 0 15px rgba(79, 195, 247, 0.6);
+      pointer-events: auto;
       text-align: center;
       animation: pulse 1.5s infinite;
-      transform: translate(-50%, -50%);
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
+      z-index: 10;
+      user-select: none;
+      cursor: pointer;
+      opacity: 0;
+      display: none;
     }
     @keyframes pulse {
       0% { transform: translate(-50%, -50%) scale(1); }
@@ -126,28 +127,28 @@
       img.style.opacity = '0';
       setTimeout(() => img.remove(), 300);
 
+      // Показываем слова по очереди, как в примере
       setTimeout(() => {
         words.forEach((word, i) => {
-          const angle = (Math.PI * 2 * i) / 5;
-          const distance = 100 + Math.random() * 30;
-          const x = e.clientX + Math.cos(angle) * distance;
-          const y = e.clientY + Math.sin(angle) * distance;
-
-          const wordEl = document.createElement('div');
-          wordEl.classList.add('word');
-          wordEl.textContent = word;
-          wordEl.style.left = x + 'px';
-          wordEl.style.top = y + 'px';
-          
-          // Добавляем обработчик клика для закрытия слова
-          wordEl.addEventListener('click', function(event) {
-            event.stopPropagation();
-            this.remove();
-          });
-          
-          container.appendChild(wordEl);
+          setTimeout(() => {
+            const wordEl = document.createElement('div');
+            wordEl.classList.add('word');
+            wordEl.textContent = word;
+            container.appendChild(wordEl);
+            
+            // Показываем слово с анимацией
+            setTimeout(() => {
+              wordEl.style.display = 'block';
+              wordEl.style.opacity = '1';
+            }, 10);
+            
+            // Добавляем обработчик клика для закрытия слова
+            wordEl.addEventListener('click', function() {
+              this.remove();
+            });
+          }, i * 500); // Показываем слова с интервалом
         });
-      }, 600);
+      }, 1200); // Ждем пока закончится анимация распада
     });
   </script>
 </body>
