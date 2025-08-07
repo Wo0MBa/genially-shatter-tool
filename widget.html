@@ -60,7 +60,7 @@
       max-width: 150px;
       word-wrap: break-word;
       white-space: normal;
-      cursor: default; /* Убрал указатель руки */
+      cursor: default;
     }
     @keyframes fadeIn {
       to { opacity: 1; }
@@ -72,7 +72,30 @@
     <img src="" alt="" class="shatter-img" id="shatterImg">
   </div>
 
+  <!-- Звук разрушения из папки sounds -->
+  <audio id="shatter-sound" preload="auto">
+    <source src="sounds/click.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
+    // Получаем звуковой элемент
+    const shatterSound = document.getElementById('shatter-sound');
+    
+    // Функция воспроизведения звука (логика как в примере)
+    function playSound(soundElement) {
+      if (!soundElement) return;
+
+      try {
+        soundElement.currentTime = 0;
+        const playPromise = soundElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => console.log("Звук заблокирован:", error));
+        }
+      } catch (error) {
+        console.log("Ошибка воспроизведения звука:", error);
+      }
+    }
+
     // Получаем параметры из URL
     const urlParams = new URLSearchParams(window.location.search);
     const imgUrl = urlParams.get('img');
@@ -84,6 +107,9 @@
     img.src = imgUrl;
 
     img.addEventListener("click", function(e) {
+      // Воспроизводим звук при клике
+      playSound(shatterSound);
+
       const rect = img.getBoundingClientRect();
       const container = img.closest('.container');
 
