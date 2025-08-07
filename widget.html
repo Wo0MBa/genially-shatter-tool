@@ -42,22 +42,25 @@
       pointer-events: none;
     }
     .word {
-      position: fixed; /* Используем fixed вместо absolute */
-      font-size: 20px;
+      position: fixed;
+      font-size: 16px; /* Уменьшил размер для лучшего отображения */
       font-weight: bold;
       color: #fff;
       opacity: 0;
       animation: fadeIn 1s forwards;
-      z-index: 10000; /* Высокий z-index */
+      z-index: 10000;
       user-select: none;
       cursor: pointer;
       background: #1a73e8;
-      padding: 12px 20px;
+      padding: 8px 12px; /* Уменьшил padding */
       border: 2px solid #4fc3f7;
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(79, 195, 247, 0.6);
       text-align: center;
       text-shadow: none;
+      max-width: 150px; /* Ограничиваем ширину */
+      word-wrap: break-word; /* Перенос слов */
+      white-space: normal; /* Разрешаем перенос */
     }
     @keyframes fadeIn {
       to { opacity: 1; }
@@ -122,10 +125,11 @@
 
       setTimeout(() => {
         words.forEach((word, i) => {
-          const angle = (Math.PI * 2 * i) / 5;
-          const distance = 100 + Math.random() * 30;
-          const x = e.clientX + Math.cos(angle) * distance;
-          const y = e.clientY + Math.sin(angle) * distance;
+          // Располагаем слова вокруг центра картинки
+          const angle = (Math.PI * 2 * i) / words.length;
+          const distance = 80; // Расстояние от центра
+          const x = rect.left + rect.width / 2 + Math.cos(angle) * distance;
+          const y = rect.top + rect.height / 2 + Math.sin(angle) * distance;
 
           const wordEl = document.createElement('div');
           wordEl.classList.add('word');
@@ -133,13 +137,39 @@
           wordEl.style.left = x + 'px';
           wordEl.style.top = y + 'px';
           
+          // Проверяем границы экрана и корректируем позицию
+          setTimeout(() => {
+            const wordRect = wordEl.getBoundingClientRect();
+            let adjustedX = x;
+            let adjustedY = y;
+            
+            // Корректируем, если слово выходит за границы слева/справа
+            if (wordRect.left < 10) {
+              adjustedX += (10 - wordRect.left);
+            } else if (wordRect.right > window.innerWidth - 10) {
+              adjustedX -= (wordRect.right - window.innerWidth + 10);
+            }
+            
+            // Корректируем, если слово выходит за границы сверху/снизу
+            if (wordRect.top < 10) {
+              adjustedY += (10 - wordRect.top);
+            } else if (wordRect.bottom > window.innerHeight - 10) {
+              adjustedY -= (wordRect.bottom - window.innerHeight + 10);
+            }
+            
+            if (adjustedX !== x || adjustedY !== y) {
+              wordEl.style.left = adjustedX + 'px';
+              wordEl.style.top = adjustedY + 'px';
+            }
+          }, 10);
+          
           // Добавляем обработчик клика для закрытия слова
           wordEl.addEventListener('click', function(event) {
             event.stopPropagation();
             this.remove();
           });
           
-          document.body.appendChild(wordEl); // Добавляем в body, а не в container
+          document.body.appendChild(wordEl);
         });
       }, 600);
     });
