@@ -27,10 +27,10 @@
       height: 150px;
       cursor: pointer;
       border-radius: 8px;
-      object-fit: contain; /* Сохраняет пропорции изображения */
+      object-fit: contain;
       transition: transform 0.2s ease;
-      box-shadow: none; /* Убрал ненужную тень */
-      border: none; /* Убрал рамку */
+      box-shadow: none;
+      border: none;
     }
     .shatter-img:hover {
       transform: scale(1.05);
@@ -45,13 +45,12 @@
       position: absolute;
       font-size: 20px;
       font-weight: bold;
-      color: #fff; /* Белый цвет текста */
+      color: #fff;
       opacity: 0;
       animation: fadeIn 1s forwards;
       z-index: 10;
       user-select: none;
       cursor: pointer;
-      /* Стиль как в примере */
       background: #1a73e8;
       padding: 12px 20px;
       border: 2px solid #4fc3f7;
@@ -59,7 +58,7 @@
       box-shadow: 0 0 15px rgba(79, 195, 247, 0.6);
       text-align: center;
       animation: pulse 1.5s infinite;
-      text-shadow: none;
+      transform: translate(-50%, -50%);
     }
     @keyframes fadeIn {
       to { opacity: 1; }
