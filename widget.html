@@ -42,16 +42,15 @@
       pointer-events: none;
     }
     .word {
-      position: absolute;
+      position: fixed; /* Используем fixed вместо absolute */
       font-size: 20px;
       font-weight: bold;
-      color: #fff; /* Белый цвет текста */
+      color: #fff;
       opacity: 0;
       animation: fadeIn 1s forwards;
-      z-index: 10;
+      z-index: 10000; /* Высокий z-index */
       user-select: none;
       cursor: pointer;
-      /* Стиль как в примере */
       background: #1a73e8;
       padding: 12px 20px;
       border: 2px solid #4fc3f7;
@@ -140,7 +139,7 @@
             this.remove();
           });
           
-          container.appendChild(wordEl);
+          document.body.appendChild(wordEl); // Добавляем в body, а не в container
         });
       }, 600);
     });
